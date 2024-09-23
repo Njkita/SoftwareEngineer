@@ -61,13 +61,6 @@ std::vector<size_t> Find_Armstrong(size_t N) {
     const short n = (std::to_string(N)).length();
     std::vector<size_t> data;
 
-    size_t A[10][n+1] = {0};
-	for (short i = 0; i < 10; ++i) {
-	    for (short j = 1; j <= n; ++j) {
-	        A[i][j] = pow (i, j);
-	    }
-	}
-	
 	for (size_t k = 1; k < N; ++k) {
 	    size_t sum = 0;
 	    size_t number = k;
@@ -75,7 +68,7 @@ std::vector<size_t> Find_Armstrong(size_t N) {
         
 	    while (number > 0) {
 	        int t = number%10;
-	        sum += A[t][l];
+	        sum += pow (t, l);  //A[t][l] 
 	        number /= 10;
 	    }
 	    
@@ -107,7 +100,7 @@ int main() {
     //Find_Excess - избыточные числа
     //Find_Fibonacci - числа Фиббоначи
     
-    std::vector<size_t> v = Find_Friendly(N);
+    std::vector<size_t> v = Find_Armstrong(N);
     
     for (short y = 0; y < v.size(); ++y) {
         std::cout << v[y] << " ";
