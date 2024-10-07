@@ -6,18 +6,18 @@
 //Реализуйте алгоритм сортировки Шелла контейнера std::vector целочисленных значений через индексы
 
 void InsertionSort(std::vector<int>& v) {
-    int n = std::size(v);
+    const int n = std::size(v);
     for (int i = 1; i < n ; ++i) { 
         int j = i;
         while ((j > 0) && (v[j] < v[j-1])) {
             std::swap(v[j], v[j-1]);
-            j-=1;
+            j--;
         }
     }
 }
 
 void ShellSort(std::vector<int>& v) {
-    int n = std::size(v);
+    const int n = std::size(v);
     int h = n/2;
     while (h > 0) {
         for (int j = 0; j < h ; ++j) {
@@ -30,7 +30,7 @@ void ShellSort(std::vector<int>& v) {
                     v[i] = v_buf[k];
             }
         }
-        h = h/2;
+        h /= 2;
     }
 }
 
@@ -40,12 +40,11 @@ int main() {
 
     std::copy(std::begin(v), std::end(v),
     std::ostream_iterator<int>(std::cout, " "));
-    std::cout << std::endl;
+        std::cout << std::endl;
 
-    
     ShellSort(v);
     std::copy(std::begin(v), std::end(v),
-    std::ostream_iterator<int>(std::cout, " "));
+        std::ostream_iterator<int>(std::cout, " "));
 }
 
     

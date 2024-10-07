@@ -5,7 +5,7 @@
 
 //Реализуйте алгоритм сортировки кучей контейнера std::vector целочисленных значений через индексы.
 
-void Sift_down(std::vector<int>& v, int i, int n) {
+void Sift_down(std::vector<int>& v, const int i, const int n) {
     if (2*i+1 < n) {    
         if (2*i+2 < n && v[i] < v[2*i + 2] && v[2*i + 1] < v[2*i + 2]) {
             std::swap(v[i], v[2*i + 2]);
@@ -19,14 +19,14 @@ void Sift_down(std::vector<int>& v, int i, int n) {
 }
 
 void HeapSort(std::vector<int>& v) {
-    int n = std::size(v);
+    const int n = std::size(v);
     for (int i = n/2; i > 0; --i) {
         Sift_down(v, i-1, n);
     }
     int Size = n;
     while (Size > 1) {
         std::swap(v[0], v[Size - 1]);
-        Size -= 1;
+        Size--;
         Sift_down(v, 0, Size);  
     }
 }
