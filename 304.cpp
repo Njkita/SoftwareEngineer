@@ -7,6 +7,7 @@ public:
     virtual void func() const {
         std::cout << "Class1" << std::endl;
     }
+    virtual ~Class1() = default;
 };
 
 class Class2 {
@@ -14,6 +15,7 @@ public:
     virtual void func() const {
         std::cout << "Class2" << std::endl;
     }
+    virtual ~Class2() = default;
 };
 
 class Class1Inheritance : public Class1 {
@@ -31,19 +33,20 @@ public:
 };
 
 class MultipleInheritance : public Class1Inheritance, public Class2Inheritance {
+/*    
 public:
-    void func1() const {
-        Class1Inheritance::func();
+    void func() const override  {
+        std::cout << "from MultipleInheritance" << std::endl;
     }
-    void func2() const {
-        Class2Inheritance::func();
-    }
+*/
 };
 
 int main() {
-    MultipleInheritance func_;
-    func_.func1();
-    func_.func2();
+    MultipleInheritance interface_;
+    Class1* ptr1 = &interface_;
+    Class2* ptr2 = &interface_;
+    ptr1->func();
+    ptr2->func();
     return 0;
 }
     

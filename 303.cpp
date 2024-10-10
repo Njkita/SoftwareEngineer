@@ -1,24 +1,35 @@
 #include <iostream>
 #include <cmath>  
 #include <numbers>
+#include <vector>
 
 //иерархия классов, описывающих геометрические фигуры
 
 class Shape {
 public: 
     virtual ~Shape() = default;
-public:
     virtual double square() const = 0;       
     virtual double perimeter() const = 0;             
 };
 
 class Polygon : public virtual Shape {
+protected:
+    std::vector<double> sides;
 public:
-    Polygon() = default;  
+    Polygon() = default;
+    Polygon(const std::vector<double>& sides_) : sides(sides_) {}
+    
+    double perimeter() const override {
+        double p = 0;
+        for (double side : sides) {
+            p += side;
+        }
+        return p;
+    }  
 };
 
 class Ellipse : public virtual Shape {
-public:
+protected:
     double semi_major_axis, semi_minor_axis;
     const double PI = 3.14159265358979;
 public:
@@ -33,45 +44,27 @@ public:
 
 class Rectangle : public virtual Polygon {
 public:
-    double width, height;
-public:
-    Rectangle(double w, double h) : width(w), height(h) {}
+    Rectangle(double w, double h) : Polygon({w, h, w, h}) {}
     double square() const override {
-        return width * height;
-    }
-    double perimeter() const override {
-        return 2 * (width + height);
+        return sides[0] * sides[1];
     }
 };
 
 class Triangle : public virtual Polygon {
 public:
-    double a, b, c; 
-public:
-    Triangle(double side1, double side2, double side3) : a(side1), b(side2), c(side3) {}
-    bool truth = ((a*a+b*b >= c*c) && (a*a+c*c >= b*b) && (b*b+c*c >= a*a));
+    Triangle(double side1, double side2, double side3) : Polygon({side1, side2, side3}) {}
+    
     double square() const override {
-        if (truth) {
-            double s = perimeter() / 2;
-            return std::sqrt(s * (s - a) * (s - b) * (s - c));
-        }
-        else {
-            return 0.0;
-        }
+        double s = perimeter() / 2;
+        return std::sqrt(s * (s - sides[0]) * (s - sides[1]) * (s - sides[2]));
     }
-    double perimeter() const override {
-        if (truth) {
-            return a + b + c;
-        }
-        else {
-            return 0.0;
-        }
-    }
-}; //треугольник
+}; 
 
 class Square : public Rectangle {
 public:
-    Square(double side) : Rectangle(side, side) {} 
+    Square(double side) : Rectangle(side, side) {
+        sides = {side, side, side, side};
+    } 
 }; 
 
 class Circle : public Ellipse {
