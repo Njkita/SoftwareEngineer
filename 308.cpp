@@ -90,15 +90,27 @@ public:
         *this = ipv4(to_ulong() - 1);
         return *this;
     }
+
+	ipv4 operator++(int) {
+        ipv4 temp = *this;
+		++(*this);
+		return temp;
+    }
+
+	ipv4 operator--(int) {
+        ipv4 temp = *this;
+		--(*this);
+		return temp;
+    }
 };
 
 int main()
 {
 	ipv4 address_1(168, 192, 0, 1);
 	std::cout << "first IP: " << address_1 << std::endl;
-	std::cout << "previous to first IP: " << --address_1 << std::endl;
+	std::cout << "make previous to first IP: " << address_1-- << std::endl;
 	ipv4 address_2(168, 192, 0, 4);
-	for (ipv4 addres = ++address_1; addres <= address_2; ++addres) {
+	for (ipv4 addres = address_1++; addres <= address_2; addres++) {
         std::cout << "next IP: " << addres << std::endl;
     }
 	
