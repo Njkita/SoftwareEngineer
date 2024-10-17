@@ -19,26 +19,30 @@ public:
 };
 
 class Class1Inheritance : public Class1 {
-public:
+private:
     void func() const override {
-        std::cout << "from Class1" << std::endl;
+        func1();
     }
+    virtual void func1() const = 0;
 };
 
 class Class2Inheritance : public Class2 {
-public:
+private:
     void func() const override {
-        std::cout << "from Class2" << std::endl;
+        func2();
     }
+    virtual void func2() const = 0;
 };
 
 class MultipleInheritance : public Class1Inheritance, public Class2Inheritance {
-/*    
-public:
-    void func() const override  {
-        std::cout << "from MultipleInheritance" << std::endl;
+private:
+    void func1() const override  {
+        std::cout << "from Class1" << std::endl;
     }
-*/
+
+    void func2() const override  {
+        std::cout << "from Class2" << std::endl;
+    }
 };
 
 int main() {
