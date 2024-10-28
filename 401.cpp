@@ -1,52 +1,42 @@
-#include <iostream>
-#include <iterator>
-#include <algorithm>
-#include <vector>
+#include <cassert>
+#include <string>
 
-//Реализуйте алгоритм сортировки кучей контейнера std::vector целочисленных значений через индексы.
+template <typename T, typename Key>
+[[nodiscard]] const T* binary_search(const T* array, std::size_t size, const Key& key)
+{
+	if (size > 0)
+	{
+		std::size_t l = 0, r = size - 1, m{};
 
-template <typename T> void Sift_down(std::vector<T>& v, const int i, const int n) {
-    if (2*i+1 < n) {    
-        if (2*i+2 < n && v[i] < v[2*i + 2] && v[2*i + 1] < v[2*i + 2]) {
-            std::swap(v[i], v[2*i + 2]);
-            Sift_down(v, 2*i+2, n);
-        }
-        else if (v[i] < v[2*i + 1]) {
-            std::swap(v[i], v[2*i + 1]);
-            Sift_down(v, 2*i+1, n);
-        }   
-    }
+		while (l < r)
+		{
+			m = l + (r - l) / 2;
+			array[m] < key ? l = m + 1 : r = m;
+		}
+
+		return (array[l] == key ? array + l : nullptr);
+	}
+	else
+	{
+		return nullptr;
+	}
 }
 
-template <typename T> void HeapSort(std::vector<T>& v) {
-    const int n = std::size(v);
-    for (int i = n/2; i > 0; --i) {
-        Sift_down(v, i-1, n);
-    }
-    int Size = n;
-    while (Size > 1) {
-        std::swap(v[0], v[Size - 1]);
-        Size--;
-        Sift_down(v, 0, Size);  
-    }
-}
+int main()
+{
+	const std::size_t size = 5;
+	const int array[size] { 1, 2, 3, 4, 5 };
 
-template <typename T> void Cout(std::vector<T>& v) {
-    std::copy(std::begin(v), std::end(v),
-        std::ostream_iterator<T>(std::cout, " "));
-    std::cout << std::endl;
-    HeapSort(v);
-    std::copy(std::begin(v), std::end(v),
-        std::ostream_iterator<T>(std::cout, " "));
-    std::cout << std::endl;
-}
+	assert(binary_search(array, size, 1) == array + 0);
+	assert(binary_search(array, size, 2) == array + 1);
+	assert(binary_search(array, size, 3) == array + 2);
+	assert(binary_search(array, size, 4) == array + 3);
+	assert(binary_search(array, size, 5) == array + 4);
 
-int main() {
-    std::vector<int> intV = {0, 2, 167, 13, 13, 57, 723, 0, 34, 12, 167, 1};
-    std::vector<double> doubleV = {5.7, 6.77, 3.584, 0.5, 6.771, 16.4};
-    
-    Cout(intV);
-    Cout(doubleV);
+	const char* str_array[] = { "a", "b", "c", "d", "e" };
+	assert(binary_search(str_array, size, std::string("d")) == str_array + 3);
+
+	return 0;
 }
 
     
