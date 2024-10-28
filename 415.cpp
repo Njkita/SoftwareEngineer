@@ -1,21 +1,23 @@
-#include <type_traits>
+#include <iostream>
 
-template <typename T> struct is_class {
- private:
-    template <typename A>
-    static char test(void (A::*)());
+template < typename ... Ts > struct List {};
 
-    template <typename A>
-    static int test(...);
+template <typename T, typename L> struct Contains;
 
- public:
-    static constexpr bool value = sizeof(test<T>(0)) == sizeof(char);
-};
+template <typename T> struct Contains<T, List<>> : std::false_type {};
 
-class Class {};
+template <typename T, typename... Ts> 
+struct Contains<T, List<T, Ts...>> : std::true_type {};
+
+template <typename T, typename A, typename... Ts>
+struct Contains<T, List<A, Ts...>> : Contains<T, List<Ts...>> {};
 
 int main() {
-    static_assert(is_class<Class>::value, "Class is class");
-    static_assert(!is_class<int>::value, "int isn't class");
+    using MyList = List<int, char, double, size_t>;
+
+    std::cout << "Contains int: " << Contains<int, MyList>::value << std::endl;
+    std::cout << "Contains float: " << Contains<float, MyList>::value << std::endl;
+    std::cout << "Contains char: " << Contains<size_t, MyList>::value << std::endl;
+
     return 0;
 }
