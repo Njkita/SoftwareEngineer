@@ -1,21 +1,15 @@
 #include <type_traits>
 
-template <typename T> struct is_class {
- private:
-    template <typename A>
-    static char test(void (A::*)());
+template <typename T, typename = std::void_t<>>
+struct is_class : std::false_type {};
 
-    template <typename A>
-    static int test(...);
-
- public:
-    static constexpr bool value = sizeof(test<T>(0)) == sizeof(char);
-};
+template <typename T>
+struct is_class<T, std::void_t<void (T::*)()>> : std::true_type {};
 
 class Class {};
 
 int main() {
-    static_assert(is_class<Class>::value, "Class is class");
-    static_assert(!is_class<int>::value, "int isn't class");
-    return 0;
+  static_assert(is_class<Class>::value, "Class is class");
+  static_assert(!is_class<int>::value, "int isn't class");
+  return 0;
 }
