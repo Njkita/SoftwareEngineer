@@ -5,12 +5,13 @@ private:
   using U = typename std::remove_reference<T>::type;
 
 public:
-  using type = typename std::conditional<
-      std::is_array<U>::value,
-      typename std::add_pointer<typename std::remove_extent<U>::type>::type,
-      typename std::conditional<std::is_function<U>::value,
-                                typename std::add_pointer<U>::type,
-                                typename std::remove_cv<U>::type>::type>::type;
+  using type = std::conditional_t<
+      std::is_array_v<U>,
+      std::add_pointer_t<std::remove_extent_t<U>>,
+      std::conditional_t<
+          std::is_function_v<U>,
+          std::add_pointer_t<U>,
+          std::remove_cv_t<U>>>;
 };
 
 template <typename T> using my_decay_t = typename decay<T>::type;
