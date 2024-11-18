@@ -1,7 +1,6 @@
 #include <iostream>
 #include <memory>
 
-
 struct Entity {
   virtual ~Entity() = default;
 
@@ -16,16 +15,20 @@ struct Server : public Entity {
   void test() const override { std::clog << "Server::test\n"; }
 };
 
-
 class Decorator : public Entity {
 public:
   explicit Decorator(std::shared_ptr<Entity> entity)
       : m_entity(std::move(entity)) {}
 
-  
+  virtual void test() const override = 0;
+
 protected:
   std::shared_ptr<Entity> m_entity;
 };
+
+void DefaultDecoratorTest(const Decorator &decorator) {
+  std::clog << "Default Decorator::test\n";
+}
 
 struct Decorated_Entity : public Decorator {
   explicit Decorated_Entity(std::shared_ptr<Entity> entity)
@@ -37,15 +40,12 @@ struct Decorated_Entity : public Decorator {
   }
 };
 
-
 int main() {
   auto client = std::make_shared<Client>();
-  auto defaultEntity = std::make_shared<Decorator>(client);
   auto decorated = std::make_shared<Decorated_Entity>(client);
 
   client->test();
   decorated->test();
-  defaultEntity->test();
 
   return 0;
 }
