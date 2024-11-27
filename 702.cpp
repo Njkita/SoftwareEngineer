@@ -20,7 +20,7 @@ public:
   Line(double a, double b, double c) : a(a), b(b), c(c) {
     if (a == 0 && b == 0) {
       throw std::invalid_argument(
-          "Invalid line coefficients: a and b cannot both be zero.");
+          "a, b can't both be zero");
     }
   }
 };
@@ -28,25 +28,22 @@ public:
 using Intersection = std::variant<std::monostate, Point, std::string>;
 
 Intersection Intersect_(const Line &l1, const Line &l2) {
-  double determinant = l1.a * l2.b - l2.a * l1.b;
+  double d = l1.a * l2.b - l2.a * l1.b;
 
-  if (determinant == 0.0) {
-    // Проверяем, совпадают ли прямые
+  if (d == 0.0) {
     if (l1.a * l2.c == l2.a * l1.c && l1.b * l2.c == l2.b * l1.c) {
-      return "Infinite intersections (the lines coincide)";
+      return "the straight lines coincided";
     } else {
-      return std::monostate{}; // Прямые параллельны
+      return std::monostate{};
     }
   } else {
-    // Одна точка пересечения
-    double x = (l1.b * l2.c - l2.b * l1.c) / determinant;
-    double y = (l2.a * l1.c - l1.a * l2.c) / determinant;
+    double x = (l1.b * l2.c - l2.b * l1.c) / d;
+    double y = (l2.a * l1.c - l1.a * l2.c) / d;
     return Point(x, y);
   }
 }
 
-// Функция для вывода результата пересечения
-void printIntersection(const Intersection &intersection) {
+void printIntersect(const Intersection &intersection) {
   if (std::holds_alternative<std::monostate>(intersection)) {
     std::cout << "No intersection (the lines are parallel)" << std::endl;
   } else if (std::holds_alternative<Point>(intersection)) {
@@ -60,16 +57,16 @@ void printIntersection(const Intersection &intersection) {
 int main() {
   try {
     double a1, b1, c1, a2, b2, c2;
-    std::cout << "First line a1, b1, c1: ";
+    std::cout << "1 straight line (a1, b1, c1): ";
     std::cin >> a1 >> b1 >> c1;
-    std::cout << "Second line a2, b2, c2: ";
+    std::cout << "2 straight line (a2, b2, c2): ";
     std::cin >> a2 >> b2 >> c2;
 
     Line l1(a1, b1, c1);
     Line l2(a2, b2, c2);
 
     Intersection result = Intersect_(l1, l2);
-    printIntersection(result);
+    printIntersect(result);
   } catch (const std::exception &e) {
     std::cerr << "Error: " << e.what() << std::endl;
   }

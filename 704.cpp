@@ -4,7 +4,7 @@
 #include <optional>
 #include <stdexcept>
 
-void demonstrateBadAlloc() {
+void BadAlloc() {
     try {
         std::vector<int> v;
         while (true) {
@@ -15,25 +15,25 @@ void demonstrateBadAlloc() {
     }
 }
 
-void demonstrateBadVariantAccess() {
+void BadVariantAccess() {
     try {
         std::variant<int, std::string> var = 42;
         std::cout << std::get<std::string>(var) << std::endl;
     } catch (const std::bad_variant_access& e) {
-        std::cerr << "std::bad_variant_access: " << e.what() << std::endl;
+        std::cerr << "Caught std::bad_variant_access: " << e.what() << std::endl;
     }
 }
 
-void demonstrateBadOptionalAccess() {
+void BadOptionalAccess() {
     try {
         std::optional<int> opt;
         std::cout << opt.value() << std::endl;
     } catch (const std::bad_optional_access& e) {
-        std::cerr << "std::bad_optional_access: " << e.what() << std::endl;
+        std::cerr << "Caught std::bad_optional_access: " << e.what() << std::endl;
     }
 }
 
-void demonstrateLengthError() {
+void LengthError() {
     try {
         std::vector<int> v;
         v.reserve(SIZE_MAX);
@@ -42,7 +42,7 @@ void demonstrateLengthError() {
     }
 }
 
-void demonstrateOutOfRange() {
+void OutOfRange() {
     try {
         std::vector<int> v = {1, 2, 3};
         std::cout << v.at(10) << std::endl;
@@ -52,22 +52,20 @@ void demonstrateOutOfRange() {
 }
 
 int main() {
-    std::cout << "Demonstrating exceptions in C++ STL:" << std::endl;
+    std::cout << "std::bad_alloc:" << std::endl;
+    BadAlloc();
 
-    std::cout << "\n1. std::bad_alloc:" << std::endl;
-    demonstrateBadAlloc();
+    std::cout << "\n std::bad_variant_access:" << std::endl;
+    BadVariantAccess();
 
-    std::cout << "\n2. std::bad_variant_access:" << std::endl;
-    demonstrateBadVariantAccess();
+    std::cout << "\n std::bad_optional_access:" << std::endl;
+    BadOptionalAccess();
 
-    std::cout << "\n3. std::bad_optional_access:" << std::endl;
-    demonstrateBadOptionalAccess();
+    std::cout << "\n std::length_error:" << std::endl;
+    LengthError();
 
-    std::cout << "\n4. std::length_error:" << std::endl;
-    demonstrateLengthError();
-
-    std::cout << "\n5. std::out_of_range:" << std::endl;
-    demonstrateOutOfRange();
+    std::cout << "\n std::out_of_range:" << std::endl;
+    OutOfRange();
 
     return 0;
 }
