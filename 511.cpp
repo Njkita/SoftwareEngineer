@@ -17,21 +17,21 @@ struct Server : public Entity {
 
 class Decorator : public Entity {
 public:
-  explicit Decorator(std::shared_ptr<Entity> entity)
+  explicit Decorator(std::unique_ptr<Entity> entity)
       : m_entity(std::move(entity)) {}
 
   virtual void test() const override = 0;
 
 protected:
-  std::shared_ptr<Entity> m_entity;
+  std::unique_ptr<Entity> m_entity;
 };
 
-void DefaultDecoratorTest(const Decorator &decorator) {
+void Decorator::test() const {
   std::clog << "Default Decorator::test\n";
 }
 
 struct Decorated_Entity : public Decorator {
-  explicit Decorated_Entity(std::shared_ptr<Entity> entity)
+  explicit Decorated_Entity(std::unique_ptr<Entity> entity)
       : Decorator(std::move(entity)) {}
 
   void test() const override {
@@ -41,10 +41,9 @@ struct Decorated_Entity : public Decorator {
 };
 
 int main() {
-  auto client = std::make_shared<Client>();
-  auto decorated = std::make_shared<Decorated_Entity>(client);
+  auto client = std::make_unique<Client>();
+  auto decorated = std::make_unique<Decorated_Entity>(std::move(client));
 
-  client->test();
   decorated->test();
 
   return 0;
