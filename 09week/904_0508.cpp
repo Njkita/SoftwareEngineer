@@ -7,7 +7,7 @@ class Entity
 {
 public:
     virtual ~Entity() = default;
-
+    
     virtual void test() const = 0;
 };
 
@@ -22,7 +22,7 @@ public:
     } 
 };
 
-////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 class Server : public Entity 
 { 
@@ -38,8 +38,7 @@ public:
 class Decorator : public Entity
 {
 public:
-    // Используем std::unique_ptr для владения объектом m_entity
-    Decorator(std::unique_ptr<Entity> entity): m_entity(std::move(entity)) {}
+    Decorator(std::shared_ptr<Entity> entity) : m_entity(std::move(entity)) {}
 
     void test() const override
     { 
@@ -48,17 +47,17 @@ public:
     }
 
 private:
-    std::unique_ptr<Entity> m_entity;  // Умный указатель на Entity
+    std::shared_ptr<Entity> m_entity;
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int main()
 {
-    // Создаем объекты с использованием std::make_unique
-    auto entity_1 = std::make_unique<Client>();
+    auto entity = std::make_shared<Client>();
 
-    auto entity_2 = std::make_unique<Decorator>(std::move(entity_1));
+    auto decorated_1 = std::make_shared<Decorator>(entity);
+    auto decorated_2 = std::make_shared<Decorator>(decorated_1);
 
-    entity_2->test();
+    decorated_2->test();
 }
