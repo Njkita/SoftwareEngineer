@@ -8,7 +8,7 @@ class Observer
 {
 public:
     virtual ~Observer() = default;
-
+    
     virtual void test(int x) const = 0;
 };
 
@@ -17,14 +17,9 @@ public:
 class Entity 
 {
 public:
-   ~Entity()
-    {
-        m_observers.clear();
-    }
-
-    void add_observer(std::shared_ptr<Observer> observer) 
+    void add_observer(std::unique_ptr<Observer> observer) 
     { 
-        m_observers.push_back(observer);
+        m_observers.push_back(std::move(observer));
     }
 
     void set(int x) 
@@ -43,7 +38,7 @@ public:
 
 private:
     int m_data = 0; 
-    std::vector<std::shared_ptr<Observer>> m_observers;
+    std::vector<std::unique_ptr<Observer>> m_observers;
 };
 
 //////////////////////////////////////////////////////////////
@@ -74,8 +69,8 @@ int main()
 {
     Entity entity;
 
-    entity.add_observer(std::make_shared<Client>());
-    entity.add_observer(std::make_shared<Server>());
+    entity.add_observer(std::make_unique<Client>());
+    entity.add_observer(std::make_unique<Server>());
 
     entity.set(1);
     entity.set(2);
