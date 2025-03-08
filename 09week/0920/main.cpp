@@ -1,17 +1,13 @@
-#include "IAllocator.h"
-#include "AllocatorV1.h"
-#include "AllocatorV2.h"
-#include "AllocatorV3.h"
-#include "AllocatorV4.h"
+#include "IAllocator.hpp"
 #include <benchmark/benchmark.h>
 
-void test_v1(benchmark::State& state)
+void test_linear_allocator(benchmark::State& state)
 {
     auto kb = 1'024uz, mb = kb * kb, gb = kb * kb * kb;
 
     for (auto element : state)
     {
-        AllocatorV1 allocator(gb);
+        LinearAllocator allocator(gb);
 
         for (auto i = 0uz; i < kb; ++i)
         {
@@ -20,12 +16,12 @@ void test_v1(benchmark::State& state)
     }
 }
 
-BENCHMARK(test_v1);
+BENCHMARK(test_linear_allocator);
 
 int main()
 {
     {
-        AllocatorV1 allocator(1'024);
+        LinearAllocator allocator(1'024);
 
         allocator.test();
 
