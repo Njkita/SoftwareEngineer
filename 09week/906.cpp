@@ -76,18 +76,26 @@ public:
 
   template <typename U> friend class Shared;
 
-  template <typename U,
-            typename = std::enable_if_t<std::is_convertible<U *, T *>::value>>
+  template <typename U>
+  requires(std::is_convertible_v<U *, T *>)
   Shared(Shared<U> &&other) noexcept
       : m_data(other.m_data), m_controller(other.m_controller) {
     other.m_data = nullptr;
     other.m_controller = nullptr;
   }
 
-  template <typename U,
-            typename = std::enable_if_t<std::is_convertible<U *, T *>::value>>
+  template <typename U>
+  requires(std::is_convertible_v<U *, T *>)
   auto &operator=(Shared<U> &&other) noexcept {
-    Shared(std::move(other)).swap(*this);
+    if (this != &other) {
+      if (m_controller) {
+        m_controller->decrease();
+      }
+      m_data = other.m_data;
+      m_controller = other.m_controller;
+      other.m_data = nullptr;
+      other.m_controller = nullptr;
+    }
     return *this;
   }
 
