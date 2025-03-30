@@ -7,7 +7,14 @@
 #include <utility>
 #include <vector>
 
-// Используем функциональный объект
+// Собственные функциональные объекты
+struct Ascending {
+    bool operator()(int a, int b) const { return a < b; }
+};
+
+struct Descending {
+    bool operator()(int a, int b) const { return a > b; }
+};
 
 template <typename Compare>
 void sort(std::vector<int> &vector, std::size_t left, std::size_t right,
@@ -67,11 +74,11 @@ int main() {
     vector[i] = size - i;
   }
 
-  timsort(vector, std::less{});
+  timsort(vector, Ascending{});
   assert(std::ranges::is_sorted(vector));
 
-  timsort(vector, std::greater{});
+  timsort(vector, Descending{});
   assert(std::ranges::is_sorted(vector, std::greater{}));
 
-  std::cout << "Sorting with function objects: OK\n";
+  std::cout << "Sorting with custom functors: OK\n";
 }

@@ -1,20 +1,20 @@
 #include <iostream>
 
-typedef void *(*FuncPtr)();
+using FuncPtr = auto(*)() -> FuncPtr;
 
-void *proxy();
+FuncPtr proxy();
 
-void *selfFunc() { return (void *)&proxy; }
+FuncPtr selfFunc() { return &proxy; }
 
-void *proxy() { return (void *)&selfFunc; }
+FuncPtr proxy() { return &selfFunc; }
 
 int main() {
-  FuncPtr f1 = (FuncPtr)selfFunc();
-  FuncPtr f2 = (FuncPtr)f1();
+    FuncPtr f1 = selfFunc();
+    FuncPtr f2 = f1();
 
-  if (f2 == (void *)&selfFunc) {
-    std::cout << "Вернули указатель" << std::endl;
-  }
+    if (f2 == &selfFunc) {
+        std::cout << "Вернули указатель" << std::endl;
+    }
 
-  return 0;
+    return 0;
 }
